@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1064752535102",
+    "project_id": "quanlychitieu-ccdbf",
+    "storage_bucket": "quanlychitieu-ccdbf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1064752535102:android:ef2d195b96926b577ce36f",
+        "android_client_info": {
+          "package_name": "com.example.qlmoney"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPJX3zFi737iip5Si5JGimi2cAuGBAZIs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
