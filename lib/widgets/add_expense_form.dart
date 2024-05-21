@@ -9,14 +9,14 @@ import 'package:intl/intl.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:qlmoney/screen/bottom_navigation_bar.dart';
 
-class AddPage extends StatefulWidget {
-  const AddPage({Key? key});
+class AddExpenseForm extends StatefulWidget {
+  const AddExpenseForm({Key? key});
 
   @override
-  State<AddPage> createState() => _AddPageState();
+  State<AddExpenseForm> createState() => _AddExpenseFormState();
 }
 
-class _AddPageState extends State<AddPage> {
+class _AddExpenseFormState extends State<AddExpenseForm> {
   TextEditingController expenseNameController = TextEditingController();
   TextEditingController expensePriceController = TextEditingController();
   TextEditingController typeController = TextEditingController();
@@ -53,7 +53,7 @@ class _AddPageState extends State<AddPage> {
   List<String> categories = [];
 
   final List<bool> _selection = [true, false]; // [Income, Expense]
-  String _selectedValue = 'Income';
+  String _selectedValue = 'Expense';
 
   @override
   void initState() {
@@ -70,19 +70,6 @@ class _AddPageState extends State<AddPage> {
       },
       child: Scaffold(
         backgroundColor: Colors.grey[200],
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const BottomNavigationPage()),
-              );
-            },
-            icon: const Icon(Ionicons.chevron_back_outline),
-          ),
-          leadingWidth: 80,
-        ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -208,165 +195,165 @@ class _AddPageState extends State<AddPage> {
                             TextEditingController();
                             return StatefulBuilder(
                                 builder: (context, setState) {
-                              return AlertDialog(
-                                title: const Text('Add Type Category'),
-                                backgroundColor:
+                                  return AlertDialog(
+                                    title: const Text('Add Type Category'),
+                                    backgroundColor:
                                     const Color.fromARGB(255, 167, 225, 245),
-                                content: SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      TextFormField(
-                                        controller: nameAddTypeController,
-                                        textAlignVertical:
+                                    content: SizedBox(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          TextFormField(
+                                            controller: nameAddTypeController,
+                                            textAlignVertical:
                                             TextAlignVertical.center,
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          filled: true,
-                                          fillColor: Colors.white,
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            borderSide: BorderSide.none,
-                                          ),
-                                          hintText: 'Name',
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 16,
-                                      ),
-                                      TextFormField(
-                                        onTap: () {
-                                          setState(() {
-                                            isExpense = !isExpense;
-                                          });
-                                        },
-                                        textAlignVertical:
-                                            TextAlignVertical.center,
-                                        readOnly: true,
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          filled: true,
-                                          suffixIcon: const Icon(
-                                            CupertinoIcons.chevron_down,
-                                            size: 12,
-                                          ),
-                                          fillColor: Colors.white,
-                                          border: OutlineInputBorder(
-                                            borderRadius: isExpense
-                                                ? const BorderRadius.vertical(
-                                                    top: Radius.circular(12),
-                                                  )
-                                                : BorderRadius.circular(12),
-                                            borderSide: BorderSide.none,
-                                          ),
-                                          hintText: 'Icon',
-                                        ),
-                                      ),
-                                      isExpense
-                                          ? Container(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              height: 200,
-                                              decoration: const BoxDecoration(
-                                                color: Colors.white,
+                                            decoration: InputDecoration(
+                                              isDense: true,
+                                              filled: true,
+                                              fillColor: Colors.white,
+                                              border: OutlineInputBorder(
                                                 borderRadius:
-                                                    BorderRadius.vertical(
-                                                  bottom: Radius.circular(12),
-                                                ),
+                                                BorderRadius.circular(12),
+                                                borderSide: BorderSide.none,
                                               ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: GridView.builder(
-                                                  gridDelegate:
-                                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                                    crossAxisCount: 3,
-                                                    crossAxisSpacing: 5,
-                                                    mainAxisSpacing: 5,
-                                                  ),
-                                                  itemCount:
-                                                      categoriesIcons.length,
-                                                  itemBuilder:
-                                                      (context, int i) {
-                                                    return GestureDetector(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          iconSelected =
-                                                              categoriesIcons[
-                                                                  i];
-                                                        });
-                                                      },
-                                                      child: Container(
-                                                          width: 50,
-                                                          height: 50,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                                  border: Border.all(
-                                                                      width: 3,
-                                                                      color: iconSelected ==
-                                                                              categoriesIcons[
-                                                                                  i]
-                                                                          ? Colors
-                                                                              .green
-                                                                          : Colors
-                                                                              .grey),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              12),
-                                                                  image:
-                                                                      DecorationImage(
-                                                                    image:
-                                                                        AssetImage(
-                                                                      'assets/image/${categoriesIcons[i]}.png',
-                                                                    ),
-                                                                  ))),
-                                                    );
-                                                  },
-                                                ),
-                                              ),
-                                            )
-                                          : Container(),
-                                      const SizedBox(
-                                        height: 16,
-                                      ),
-                                      SizedBox(
-                                        width: double.infinity,
-                                        height: kToolbarHeight,
-                                        child: TextButton(
-                                          onPressed: () {
-                                            if(nameAddTypeController.text.isNotEmpty && iconSelected.isNotEmpty){
-                                              var newTypeName = nameAddTypeController.text.toString();
-                                              _saveCategory(newTypeName, iconSelected);
-                                              Navigator.pop(ctx);
-                                            }
-                                          },
-                                          style: TextButton.styleFrom(
-                                            backgroundColor: Colors.black,
-                                            padding: const EdgeInsets.all(16),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
+                                              hintText: 'Name',
                                             ),
                                           ),
-                                          child: const Text(
-                                            'Save',
-                                            style: TextStyle(
+                                          const SizedBox(
+                                            height: 16,
+                                          ),
+                                          TextFormField(
+                                            onTap: () {
+                                              setState(() {
+                                                isExpense = !isExpense;
+                                              });
+                                            },
+                                            textAlignVertical:
+                                            TextAlignVertical.center,
+                                            readOnly: true,
+                                            decoration: InputDecoration(
+                                              isDense: true,
+                                              filled: true,
+                                              suffixIcon: const Icon(
+                                                CupertinoIcons.chevron_down,
+                                                size: 12,
+                                              ),
+                                              fillColor: Colors.white,
+                                              border: OutlineInputBorder(
+                                                borderRadius: isExpense
+                                                    ? const BorderRadius.vertical(
+                                                  top: Radius.circular(12),
+                                                )
+                                                    : BorderRadius.circular(12),
+                                                borderSide: BorderSide.none,
+                                              ),
+                                              hintText: 'Icon',
+                                            ),
+                                          ),
+                                          isExpense
+                                              ? Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            height: 200,
+                                            decoration: const BoxDecoration(
                                               color: Colors.white,
-                                              fontSize: 22,
-                                              fontWeight: FontWeight.bold,
+                                              borderRadius:
+                                              BorderRadius.vertical(
+                                                bottom: Radius.circular(12),
+                                              ),
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                              const EdgeInsets.all(8.0),
+                                              child: GridView.builder(
+                                                gridDelegate:
+                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                                  crossAxisCount: 3,
+                                                  crossAxisSpacing: 5,
+                                                  mainAxisSpacing: 5,
+                                                ),
+                                                itemCount:
+                                                categoriesIcons.length,
+                                                itemBuilder:
+                                                    (context, int i) {
+                                                  return GestureDetector(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        iconSelected =
+                                                        categoriesIcons[
+                                                        i];
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                        width: 50,
+                                                        height: 50,
+                                                        decoration:
+                                                        BoxDecoration(
+                                                            border: Border.all(
+                                                                width: 3,
+                                                                color: iconSelected ==
+                                                                    categoriesIcons[
+                                                                    i]
+                                                                    ? Colors
+                                                                    .green
+                                                                    : Colors
+                                                                    .grey),
+                                                            borderRadius:
+                                                            BorderRadius
+                                                                .circular(
+                                                                12),
+                                                            image:
+                                                            DecorationImage(
+                                                              image:
+                                                              AssetImage(
+                                                                'assets/image/${categoriesIcons[i]}.png',
+                                                              ),
+                                                            ))),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          )
+                                              : Container(),
+                                          const SizedBox(
+                                            height: 16,
+                                          ),
+                                          SizedBox(
+                                            width: double.infinity,
+                                            height: kToolbarHeight,
+                                            child: TextButton(
+                                              onPressed: () {
+                                                if(nameAddTypeController.text.isNotEmpty && iconSelected.isNotEmpty){
+                                                  var newTypeName = nameAddTypeController.text.toString();
+                                                  _saveCategory(newTypeName, iconSelected);
+                                                  Navigator.pop(ctx);
+                                                }
+                                              },
+                                              style: TextButton.styleFrom(
+                                                backgroundColor: Colors.black,
+                                                padding: const EdgeInsets.all(16),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                  BorderRadius.circular(12),
+                                                ),
+                                              ),
+                                              child: const Text(
+                                                'Save',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 22,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            });
+                                    ),
+                                  );
+                                });
                           });
                     },
                     icon: const Icon(FontAwesomeIcons.plus,
@@ -416,45 +403,12 @@ class _AddPageState extends State<AddPage> {
               const SizedBox(
                 height: 32,
               ),
-              // chon Thu hay Chi
-              ToggleButtons(
-                borderRadius: BorderRadius.circular(20),
-                isSelected: _selection,
-                onPressed: (index) {
-                  setState(() {
-                    for (int i = 0; i < _selection.length; i++) {
-                      _selection[i] = i == index;
-                    }
-                    _selectedValue = index == 0 ? 'Income' : 'Expense';
-                  });
-                },
-                children: const [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Text('Income'),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Text('Expense'),
-                  ),
-                ],
-                selectedColor:
-                    Colors.white, // Màu của văn bản khi nút được chọn
-                fillColor: Colors.blue,
-                textStyle: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
               SizedBox(
                 width: double.infinity,
                 height: kToolbarHeight,
                 child: TextButton(
                   onPressed: () {
-                    _saveThuChi(expenseNameController.text, expensePriceController.text, selectedCategory!, dateController.text, _selectedValue);
+                    _saveChi(expenseNameController.text, expensePriceController.text, selectedCategory!, dateController.text, _selectedValue);
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 24, 221, 10),
@@ -527,12 +481,15 @@ class _AddPageState extends State<AddPage> {
           snapshotValue.forEach((key, value) {
             // Lấy dữ liệu từ mỗi phần tử và thêm vào danh sách categories
             String categoryName = value['name'];
-            categories.add(categoryName);
+            if(categoryName != "Lương "){
+              categories.add(categoryName);
+            }
           });
 
           setState(() {
             // Cập nhật danh sách categories và gọi setState
             categories = categories;
+            print("$categories");
           });
         }
       } catch (error) {
@@ -543,7 +500,7 @@ class _AddPageState extends State<AddPage> {
   }
 
 //   Ham luu thu || chi
-  Future<void> _saveThuChi(String name, String price, String categoryName, String date, String type) async {
+  Future<void> _saveChi(String name, String price, String categoryName, String date, String type) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
@@ -567,7 +524,7 @@ class _AddPageState extends State<AddPage> {
         });
 
       } catch (error) {
-        print('Lỗi khi lưu khoản ThuChi: $error');
+        print('Lỗi khi lưu khoản Chi: $error');
         // Xử lý lỗi ở đây, như hiển thị một snackbar hoặc hộp thoại cảnh báo
       }
     }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qlmoney/screen/add_type_page.dart';
+import 'package:qlmoney/screen/add_page.dart';
 import 'package:qlmoney/screen/home.dart';
 import 'package:qlmoney/screen/remind_page.dart';
 import 'package:qlmoney/screen/thongke_page.dart';
@@ -19,7 +19,7 @@ class _BottomNavigationPageState extends State<BottomNavigationPage> {
   List pages =  [
     HomePage(),
     ThongKePage(),
-    AddPage(),
+    AddThuChiPage(),
     RemindPage(),
     AccountPage(),
   ];
