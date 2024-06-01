@@ -3,10 +3,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:qlmoney/screen/bottom_navigation_bar.dart';
 
 class AddExpenseForm extends StatefulWidget {
@@ -37,7 +35,6 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
     return null;
   }
 
-
   List<String> categoriesIcons = [
     'salary',
     'food',
@@ -52,7 +49,6 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
   String? selectedCategory;
   List<String> categories = [];
 
-  final List<bool> _selection = [true, false]; // [Income, Expense]
   String _selectedValue = 'Expense';
 
   @override
@@ -192,168 +188,173 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
                             bool isExpense = false;
                             String iconSelected = '';
                             TextEditingController nameAddTypeController =
-                            TextEditingController();
+                                TextEditingController();
                             return StatefulBuilder(
                                 builder: (context, setState) {
-                                  return AlertDialog(
-                                    title: const Text('Add Type Category'),
-                                    backgroundColor:
+                              return AlertDialog(
+                                title: const Text('Add Type Category'),
+                                backgroundColor:
                                     const Color.fromARGB(255, 167, 225, 245),
-                                    content: SizedBox(
-                                      width: MediaQuery.of(context).size.width,
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          TextFormField(
-                                            controller: nameAddTypeController,
-                                            textAlignVertical:
+                                content: SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      TextFormField(
+                                        controller: nameAddTypeController,
+                                        textAlignVertical:
                                             TextAlignVertical.center,
-                                            decoration: InputDecoration(
-                                              isDense: true,
-                                              filled: true,
-                                              fillColor: Colors.white,
-                                              border: OutlineInputBorder(
-                                                borderRadius:
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                          filled: true,
+                                          fillColor: Colors.white,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
                                                 BorderRadius.circular(12),
-                                                borderSide: BorderSide.none,
-                                              ),
-                                              hintText: 'Name',
-                                            ),
+                                            borderSide: BorderSide.none,
                                           ),
-                                          const SizedBox(
-                                            height: 16,
-                                          ),
-                                          TextFormField(
-                                            onTap: () {
-                                              setState(() {
-                                                isExpense = !isExpense;
-                                              });
-                                            },
-                                            textAlignVertical:
-                                            TextAlignVertical.center,
-                                            readOnly: true,
-                                            decoration: InputDecoration(
-                                              isDense: true,
-                                              filled: true,
-                                              suffixIcon: const Icon(
-                                                CupertinoIcons.chevron_down,
-                                                size: 12,
-                                              ),
-                                              fillColor: Colors.white,
-                                              border: OutlineInputBorder(
-                                                borderRadius: isExpense
-                                                    ? const BorderRadius.vertical(
-                                                  top: Radius.circular(12),
-                                                )
-                                                    : BorderRadius.circular(12),
-                                                borderSide: BorderSide.none,
-                                              ),
-                                              hintText: 'Icon',
-                                            ),
-                                          ),
-                                          isExpense
-                                              ? Container(
-                                            width: MediaQuery.of(context)
-                                                .size
-                                                .width,
-                                            height: 200,
-                                            decoration: const BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                              BorderRadius.vertical(
-                                                bottom: Radius.circular(12),
-                                              ),
-                                            ),
-                                            child: Padding(
-                                              padding:
-                                              const EdgeInsets.all(8.0),
-                                              child: GridView.builder(
-                                                gridDelegate:
-                                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                                  crossAxisCount: 3,
-                                                  crossAxisSpacing: 5,
-                                                  mainAxisSpacing: 5,
-                                                ),
-                                                itemCount:
-                                                categoriesIcons.length,
-                                                itemBuilder:
-                                                    (context, int i) {
-                                                  return GestureDetector(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        iconSelected =
-                                                        categoriesIcons[
-                                                        i];
-                                                      });
-                                                    },
-                                                    child: Container(
-                                                        width: 50,
-                                                        height: 50,
-                                                        decoration:
-                                                        BoxDecoration(
-                                                            border: Border.all(
-                                                                width: 3,
-                                                                color: iconSelected ==
-                                                                    categoriesIcons[
-                                                                    i]
-                                                                    ? Colors
-                                                                    .green
-                                                                    : Colors
-                                                                    .grey),
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                12),
-                                                            image:
-                                                            DecorationImage(
-                                                              image:
-                                                              AssetImage(
-                                                                'assets/image/${categoriesIcons[i]}.png',
-                                                              ),
-                                                            ))),
-                                                  );
-                                                },
-                                              ),
-                                            ),
-                                          )
-                                              : Container(),
-                                          const SizedBox(
-                                            height: 16,
-                                          ),
-                                          SizedBox(
-                                            width: double.infinity,
-                                            height: kToolbarHeight,
-                                            child: TextButton(
-                                              onPressed: () {
-                                                if(nameAddTypeController.text.isNotEmpty && iconSelected.isNotEmpty){
-                                                  var newTypeName = nameAddTypeController.text.toString();
-                                                  _saveCategory(newTypeName, iconSelected);
-                                                  Navigator.pop(ctx);
-                                                }
-                                              },
-                                              style: TextButton.styleFrom(
-                                                backgroundColor: Colors.black,
-                                                padding: const EdgeInsets.all(16),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                  BorderRadius.circular(12),
-                                                ),
-                                              ),
-                                              child: const Text(
-                                                'Save',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 22,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                          hintText: 'Name',
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                });
+                                      const SizedBox(
+                                        height: 16,
+                                      ),
+                                      TextFormField(
+                                        onTap: () {
+                                          setState(() {
+                                            isExpense = !isExpense;
+                                          });
+                                        },
+                                        textAlignVertical:
+                                            TextAlignVertical.center,
+                                        readOnly: true,
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                          filled: true,
+                                          suffixIcon: const Icon(
+                                            CupertinoIcons.chevron_down,
+                                            size: 12,
+                                          ),
+                                          fillColor: Colors.white,
+                                          border: OutlineInputBorder(
+                                            borderRadius: isExpense
+                                                ? const BorderRadius.vertical(
+                                                    top: Radius.circular(12),
+                                                  )
+                                                : BorderRadius.circular(12),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                          hintText: 'Icon',
+                                        ),
+                                      ),
+                                      isExpense
+                                          ? Container(
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width,
+                                              height: 200,
+                                              decoration: const BoxDecoration(
+                                                color: Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.vertical(
+                                                  bottom: Radius.circular(12),
+                                                ),
+                                              ),
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: GridView.builder(
+                                                  gridDelegate:
+                                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                                    crossAxisCount: 3,
+                                                    crossAxisSpacing: 5,
+                                                    mainAxisSpacing: 5,
+                                                  ),
+                                                  itemCount:
+                                                      categoriesIcons.length,
+                                                  itemBuilder:
+                                                      (context, int i) {
+                                                    return GestureDetector(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          iconSelected =
+                                                              categoriesIcons[
+                                                                  i];
+                                                        });
+                                                      },
+                                                      child: Container(
+                                                          width: 50,
+                                                          height: 50,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                                  border: Border.all(
+                                                                      width: 3,
+                                                                      color: iconSelected ==
+                                                                              categoriesIcons[
+                                                                                  i]
+                                                                          ? Colors
+                                                                              .green
+                                                                          : Colors
+                                                                              .grey),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              12),
+                                                                  image:
+                                                                      DecorationImage(
+                                                                    image:
+                                                                        AssetImage(
+                                                                      'assets/image/${categoriesIcons[i]}.png',
+                                                                    ),
+                                                                  ))),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            )
+                                          : Container(),
+                                      const SizedBox(
+                                        height: 16,
+                                      ),
+                                      SizedBox(
+                                        width: double.infinity,
+                                        height: kToolbarHeight,
+                                        child: TextButton(
+                                          onPressed: () {
+                                            if (nameAddTypeController
+                                                    .text.isNotEmpty &&
+                                                iconSelected.isNotEmpty) {
+                                              var newTypeName =
+                                                  nameAddTypeController.text
+                                                      .toString();
+                                              _saveCategory(
+                                                  newTypeName, iconSelected);
+                                              Navigator.pop(ctx);
+                                            }
+                                          },
+                                          style: TextButton.styleFrom(
+                                            backgroundColor: Colors.black,
+                                            padding: const EdgeInsets.all(16),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                          ),
+                                          child: const Text(
+                                            'Save',
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 22,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            });
                           });
                     },
                     icon: const Icon(FontAwesomeIcons.plus,
@@ -408,7 +409,17 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
                 height: kToolbarHeight,
                 child: TextButton(
                   onPressed: () {
-                    _saveChi(expenseNameController.text, expensePriceController.text, selectedCategory!, dateController.text, _selectedValue);
+                    _saveChi(
+                        expenseNameController.text,
+                        expensePriceController.text,
+                        selectedCategory!,
+                        dateController.text,
+                        _selectedValue);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BottomNavigationPage()),
+                    );
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 24, 221, 10),
@@ -439,12 +450,14 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
-        DatabaseReference ref = FirebaseDatabase.instance.reference()
+        DatabaseReference ref = FirebaseDatabase.instance
+            .reference()
             .child('users')
             .child(user.uid)
             .child('typecategorys')
             .push();
-        String typeId = ref.key ?? ''; // Sử dụng ref.key trực tiếp thay vì nullable
+        String typeId =
+            ref.key ?? ''; // Sử dụng ref.key trực tiếp thay vì nullable
         await ref.set({
           'id': typeId,
           'name': nameNewType,
@@ -481,7 +494,7 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
           snapshotValue.forEach((key, value) {
             // Lấy dữ liệu từ mỗi phần tử và thêm vào danh sách categories
             String categoryName = value['name'];
-            if(categoryName != "Lương "){
+            if (categoryName != "Lương ") {
               categories.add(categoryName);
             }
           });
@@ -489,7 +502,6 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
           setState(() {
             // Cập nhật danh sách categories và gọi setState
             categories = categories;
-            print("$categories");
           });
         }
       } catch (error) {
@@ -500,14 +512,16 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
   }
 
 //   Ham luu thu || chi
-  Future<void> _saveChi(String name, String price, String categoryName, String date, String type) async {
+  Future<void> _saveChi(String name, String price, String categoryName,
+      String date, String type) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
         // Lấy category_id từ category_name
         String categoryId = await getCategoryID(categoryName);
 
-        DatabaseReference refKhoanThuChi = FirebaseDatabase.instance.reference()
+        DatabaseReference refKhoanThuChi = FirebaseDatabase.instance
+            .reference()
             .child('users')
             .child(user.uid)
             .child('khoanthuchi')
@@ -522,7 +536,6 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
           'date': date,
           'type': type,
         });
-
       } catch (error) {
         print('Lỗi khi lưu khoản Chi: $error');
         // Xử lý lỗi ở đây, như hiển thị một snackbar hoặc hộp thoại cảnh báo
@@ -560,5 +573,4 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
       throw 'Người dùng không hợp lệ';
     }
   }
-
 }

@@ -1,12 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:qlmoney/screen/bottom_navigation_bar.dart';
 
 class AddIncomeForm extends StatefulWidget {
@@ -49,9 +46,8 @@ class _AddIncomeFormState extends State<AddIncomeForm> {
   //   'bill',
   // ];
 
-  String selectedCategory ="Lương ";
+  String selectedCategory = "Lương ";
 
-  final List<bool> _selection = [true, false]; // [Income, Expense]
   String _selectedValue = 'Income';
 
   @override
@@ -171,7 +167,17 @@ class _AddIncomeFormState extends State<AddIncomeForm> {
                 height: kToolbarHeight,
                 child: TextButton(
                   onPressed: () {
-                    _saveThu(incomeNameController.text, incomePriceController.text, selectedCategory!, dateController.text, _selectedValue);
+                    _saveThu(
+                        incomeNameController.text,
+                        incomePriceController.text,
+                        selectedCategory,
+                        dateController.text,
+                        _selectedValue);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BottomNavigationPage()),
+                    );
                   },
                   style: TextButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 24, 221, 10),
@@ -197,18 +203,17 @@ class _AddIncomeFormState extends State<AddIncomeForm> {
     );
   }
 
-
-
-
-//   Ham luu thu || chi
-  Future<void> _saveThu(String name, String price, String categoryName, String date, String type) async {
+//   Ham luu thu
+  Future<void> _saveThu(String name, String price, String categoryName,
+      String date, String type) async {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       try {
         // Lấy category_id từ category_name
         String categoryId = await getCategoryID(categoryName);
 
-        DatabaseReference refKhoanThuChi = FirebaseDatabase.instance.reference()
+        DatabaseReference refKhoanThuChi = FirebaseDatabase.instance
+            .reference()
             .child('users')
             .child(user.uid)
             .child('khoanthuchi')
@@ -223,7 +228,6 @@ class _AddIncomeFormState extends State<AddIncomeForm> {
           'date': date,
           'type': type,
         });
-
       } catch (error) {
         print('Lỗi khi lưu khoản Chi: $error');
         // Xử lý lỗi ở đây, như hiển thị một snackbar hoặc hộp thoại cảnh báo
@@ -261,5 +265,4 @@ class _AddIncomeFormState extends State<AddIncomeForm> {
       throw 'Người dùng không hợp lệ';
     }
   }
-
 }

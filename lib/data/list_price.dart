@@ -24,7 +24,8 @@ class FirebaseService {
 
         // Lấy dữ liệu từ Firebase một lần
         var moneySnapshot = _moneyRef.snapshot.value as Map<dynamic, dynamic>?;
-        var categorySnapshot = snapshot.snapshot.value as Map<dynamic, dynamic>?;
+        var categorySnapshot =
+            snapshot.snapshot.value as Map<dynamic, dynamic>?;
 
         if (moneySnapshot != null && categorySnapshot != null) {
           // Lưu trữ dữ liệu typecategorys trong một bản đồ với các ID loại làm khóa
@@ -48,15 +49,19 @@ class FirebaseService {
             String price = value['price'];
 
             // Chuyển đổi giá trị date từ Firebase thành DateTime
-            DateFormat dateFormat = DateFormat('dd/MM/yy'); // Định dạng ngày từ Firebase
+            DateFormat dateFormat =
+                DateFormat('dd/MM/yy'); // Định dạng ngày từ Firebase
             DateTime transactionDate = dateFormat.parse(time);
             DateTime today = DateTime.now();
-            DateTime todayStart = DateTime(today.year, today.month, today.day); // Ngày hôm nay bắt đầu
-            DateTime todayEnd = DateTime(today.year, today.month, today.day, 23, 59, 59); // Ngày hôm nay kết thúc
+            DateTime todayStart = DateTime(
+                today.year, today.month, today.day); // Ngày hôm nay bắt đầu
+            DateTime todayEnd = DateTime(today.year, today.month, today.day, 23,
+                59, 59); // Ngày hôm nay kết thúc
 
             // So sánh ngày giao dịch với ngày hôm nay
             if (transactionDate.isAtSameMomentAs(todayStart) ||
-                (transactionDate.isAfter(todayStart) && transactionDate.isBefore(todayEnd))) {
+                (transactionDate.isAfter(todayStart) &&
+                    transactionDate.isBefore(todayEnd))) {
               Money money = Money(
                 icon: categoryIcon,
                 nameCategory: categoryName,
@@ -101,20 +106,27 @@ class FirebaseService {
           snapshotValue.forEach((key, value) {
             // Lấy dữ liệu từ mỗi phần tử và thêm vào danh sách categories
             String dateThu = value['date'];
-            String type = value['type']; // Đảm bảo rằng bạn lấy đúng trường 'type'
-            String priceStr = value['price']; // Đảm bảo rằng bạn lấy đúng trường 'price'
+            String type =
+                value['type']; // Đảm bảo rằng bạn lấy đúng trường 'type'
+            String priceStr =
+                value['price']; // Đảm bảo rằng bạn lấy đúng trường 'price'
 
             // Chuyển đổi price từ String sang int
             int price = int.parse(priceStr);
 
-            DateFormat dateFormat = DateFormat('dd/MM/yy'); // Định dạng ngày từ Firebase
+            DateFormat dateFormat =
+                DateFormat('dd/MM/yy'); // Định dạng ngày từ Firebase
             DateTime transactionDate = dateFormat.parse(dateThu);
             DateTime today = DateTime.now();
-            DateTime todayStart = DateTime(today.year, today.month, today.day); // Ngày hôm nay bắt đầu
-            DateTime todayEnd = DateTime(today.year, today.month, today.day, 23, 59, 59); // Ngày hôm nay kết thúc
+            DateTime todayStart = DateTime(
+                today.year, today.month, today.day); // Ngày hôm nay bắt đầu
+            DateTime todayEnd = DateTime(today.year, today.month, today.day, 23,
+                59, 59); // Ngày hôm nay kết thúc
 
-            if (type == "Income" && (transactionDate.isAtSameMomentAs(todayStart) ||
-                (transactionDate.isAfter(todayStart) && transactionDate.isBefore(todayEnd)))) {
+            if (type == "Income" &&
+                (transactionDate.isAtSameMomentAs(todayStart) ||
+                    (transactionDate.isAfter(todayStart) &&
+                        transactionDate.isBefore(todayEnd)))) {
               tongThu += price;
             }
           });
@@ -149,20 +161,27 @@ class FirebaseService {
           snapshotValue.forEach((key, value) {
             // Lấy dữ liệu từ mỗi phần tử và thêm vào danh sách categories
             String dateThu = value['date'];
-            String type = value['type']; // Đảm bảo rằng bạn lấy đúng trường 'type'
-            String priceStr = value['price']; // Đảm bảo rằng bạn lấy đúng trường 'price'
+            String type =
+                value['type']; // Đảm bảo rằng bạn lấy đúng trường 'type'
+            String priceStr =
+                value['price']; // Đảm bảo rằng bạn lấy đúng trường 'price'
 
             // Chuyển đổi price từ String sang int
             int price = int.parse(priceStr);
 
-            DateFormat dateFormat = DateFormat('dd/MM/yy'); // Định dạng ngày từ Firebase
+            DateFormat dateFormat =
+                DateFormat('dd/MM/yy'); // Định dạng ngày từ Firebase
             DateTime transactionDate = dateFormat.parse(dateThu);
             DateTime today = DateTime.now();
-            DateTime todayStart = DateTime(today.year, today.month, today.day); // Ngày hôm nay bắt đầu
-            DateTime todayEnd = DateTime(today.year, today.month, today.day, 23, 59, 59); // Ngày hôm nay kết thúc
+            DateTime todayStart = DateTime(
+                today.year, today.month, today.day); // Ngày hôm nay bắt đầu
+            DateTime todayEnd = DateTime(today.year, today.month, today.day, 23,
+                59, 59); // Ngày hôm nay kết thúc
 
-            if (type == "Expense" && (transactionDate.isAtSameMomentAs(todayStart) ||
-                (transactionDate.isAfter(todayStart) && transactionDate.isBefore(todayEnd)))) {
+            if (type == "Expense" &&
+                (transactionDate.isAtSameMomentAs(todayStart) ||
+                    (transactionDate.isAfter(todayStart) &&
+                        transactionDate.isBefore(todayEnd)))) {
               tongChi += price;
             }
           });

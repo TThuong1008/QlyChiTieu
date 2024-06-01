@@ -10,42 +10,38 @@ import 'bottom_navigation_bar.dart';
 class AddThuChiPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Sliver Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: ConvertAddThuChi(),
-    );
-  }
-}
-
-class ConvertAddThuChi extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-            leading: IconButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const BottomNavigationPage()),
-                );
-              },
-              icon: const Icon(Ionicons.chevron_back_outline),
+          centerTitle: true,
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(48.0),
+            child: TabBar(
+              indicator: UnderlineTabIndicator(
+                borderSide: BorderSide(width: 4.0, color: Colors.blueAccent),
+                insets: EdgeInsets.symmetric(horizontal: 16.0),
+              ),
+              labelColor: Colors.blueAccent,
+              unselectedLabelColor: Colors.blueGrey,
+              labelStyle: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+              tabs: [
+                Tab(
+                  text: 'Thu',
+                  icon: Icon(Ionicons.arrow_up_circle_outline),
+                ),
+                Tab(
+                  text: 'Chi',
+                  icon: Icon(Ionicons.arrow_down_circle_outline),
+                ),
+              ],
             ),
-            leadingWidth: 80,
-          bottom: const TabBar(
-            tabs: [
-              Tab(text: 'Thu'),
-              Tab(text: 'Chi'),
-            ],
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
             AddIncomeForm(),
             AddExpenseForm(),
@@ -55,6 +51,12 @@ class ConvertAddThuChi extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+
 
 
 

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:qlmoney/data/list_price.dart';
+import 'package:qlmoney/screen/all_khoanthuchi_page.dart';
 import '../data/money.dart';
 
 class HomePage extends StatelessWidget {
@@ -15,49 +16,47 @@ class HomePage extends StatelessWidget {
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
-        FutureBuilder<List<int>>(
-        future: Future.wait([
-        _firebaseService.getPriceIncomeInDay(),
-          _firebaseService.getPriceExpenseInDay()
-          ]),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const SliverFillRemaining(
-            child: Center(
-              child: CircularProgressIndicator(),
+            FutureBuilder<List<int>>(
+              future: Future.wait([
+                _firebaseService.getPriceIncomeInDay(),
+                _firebaseService.getPriceExpenseInDay()
+              ]),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const SliverFillRemaining(
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                } else if (snapshot.hasError) {
+                  return SliverFillRemaining(
+                    child: Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    ),
+                  );
+                } else {
+                  // Ensure the snapshot data is not null and has the correct length
+                  if (snapshot.hasData && snapshot.data!.length == 2) {
+                    int totalIncome = snapshot.data![0];
+                    int totalExpense = snapshot.data![1];
+                    return SliverToBoxAdapter(
+                      child: SizedBox(
+                        height: 340,
+                        child: _head(user.email!, totalIncome, totalExpense),
+                      ),
+                    );
+                  } else {
+                    // Handle the case where the data is not as expected
+                    return SliverFillRemaining(
+                      child: Center(
+                        child: Text('Unexpected data format'),
+                      ),
+                    );
+                  }
+                }
+              },
             ),
-          );
-        } else if (snapshot.hasError) {
-          return SliverFillRemaining(
-            child: Center(
-              child: Text('Error: ${snapshot.error}'),
-            ),
-          );
-        } else {
-          // Ensure the snapshot data is not null and has the correct length
-          if (snapshot.hasData && snapshot.data!.length == 2) {
-            int totalIncome = snapshot.data![0];
-            int totalExpense = snapshot.data![1];
-            return SliverToBoxAdapter(
-              child: SizedBox(
-                height: 340,
-                child: _head(user.email!, totalIncome, totalExpense),
-              ),
-            );
-          } else {
-            // Handle the case where the data is not as expected
-            return SliverFillRemaining(
-              child: Center(
-                child: Text('Unexpected data format'),
-              ),
-            );
-          }
-        }
-      },
-    ),
-
-
-    const SliverToBoxAdapter(
+            SliverToBoxAdapter(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 child: SizedBox(
@@ -72,12 +71,39 @@ class HomePage extends StatelessWidget {
                           color: Colors.black,
                         ),
                       ),
-                      Text(
-                        'See all',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 15,
-                          color: Colors.grey,
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              BorderRadius.circular(20), // Định hình viền nút
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.orange
+                                  .withOpacity(0.2), // Màu của đổ bóng
+                              spreadRadius: 3, // Bán kính của đổ bóng
+                              blurRadius: 5, // Độ mờ của đổ bóng
+                              offset:
+                                  Offset(0, 3), // Độ dịch chuyển của đổ bóng
+                            ),
+                          ],
+                          border: Border.all(
+                              color: Colors.orange), // Định dạng đường viền
+                        ),
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => AllKhoanThuChi()),
+                            );
+                          },
+                          child: Text(
+                            'See all',
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
+                              color: Colors.blue,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -136,12 +162,13 @@ class HomePage extends StatelessWidget {
           fontSize: 17,
         ),
       ),
-      subtitle: Text(
-        money.time ?? '',
+      subtitle: const Text(
+        "Today",
         style: TextStyle(
           fontWeight: FontWeight.w300,
           fontSize: 15,
           color: Color.fromARGB(255, 41, 78, 243),
+          fontStyle: FontStyle.italic,
         ),
       ),
       trailing: Text(

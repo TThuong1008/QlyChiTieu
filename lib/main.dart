@@ -10,7 +10,8 @@ Future<void> main() async {
       appId: "1:1064752535102:android:ef2d195b96926b577ce36f",
       messagingSenderId: "XXX",
       projectId: "quanlychitieu-ccdbf",
-      databaseURL: 'https://quanlychitieu-ccdbf-default-rtdb.asia-southeast1.firebasedatabase.app/',
+      databaseURL:
+          'https://quanlychitieu-ccdbf-default-rtdb.asia-southeast1.firebasedatabase.app/',
     ),
   );
 
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Money Management',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,

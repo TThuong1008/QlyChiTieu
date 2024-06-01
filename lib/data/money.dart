@@ -4,7 +4,7 @@ class Money {
   String? name;
   String? time;
   String? type;
-  String ? price;
+  String? price;
 
   Money({
     this.icon,
@@ -18,11 +18,11 @@ class Money {
   factory Money.fromJson(Map<String, dynamic> json) {
     return Money(
       icon: json['icon'],
-      nameCategory: json['name'],// Assuming 'image' is the correct field
+      nameCategory: json['name'],
       name: json['name'],
       time: json['date'],
       type: json['type'],
-      price: json['price'] , // Converting to double if needed
+      price: json['price'],
     );
   }
 }
