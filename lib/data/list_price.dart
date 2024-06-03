@@ -85,6 +85,47 @@ class FirebaseService {
     return danhSachGiaoDich;
   }
 
+  // tong thu toan bo
+  Future<int> totalIncome() async {
+    final user = FirebaseAuth.instance.currentUser;
+    int tongThu = 0;
+    if (user != null) {
+      try {
+        DatabaseEvent thuchi = await FirebaseDatabase.instance
+            .reference()
+            .child('users')
+            .child(user.uid)
+            .child('khoanthuchi')
+            .once();
+
+        // Lấy dữ liệu từ snapshot
+        var snapshotValue = thuchi.snapshot.value as Map<dynamic, dynamic>?;
+
+        if (snapshotValue != null) {
+          // Duyệt qua mỗi phần tử trong snapshotValue
+          snapshotValue.forEach((key, value) {
+            String type =
+                value['type']; // Đảm bảo rằng bạn lấy đúng trường 'type'
+            String priceStr =
+                value['price']; // Đảm bảo rằng bạn lấy đúng trường 'price'
+
+            // Chuyển đổi price từ String sang int
+            int price = int.parse(priceStr);
+
+            if (type == "Income") {
+              tongThu += price;
+            }
+          });
+        }
+        print(tongThu);
+      } catch (error) {
+        print('Lỗi khi lấy danh sách categories từ Firebase: $error');
+        // Xử lý lỗi nếu có
+      }
+    }
+    return tongThu;
+  }
+
   // lay ra tong thu trong ngay hom do
   Future<int> getPriceIncomeInDay() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -193,5 +234,70 @@ class FirebaseService {
       }
     }
     return tongChi;
+  }
+
+  // thong_ke
+  Future<List<Money>> thongKe() async {
+    final user = FirebaseAuth.instance.currentUser;
+    List<Money> danhSachGiaoDich = [];
+    if (user != null) {
+      try {
+        DatabaseReference moneyRef = FirebaseDatabase.instance
+            .reference()
+            .child('users')
+            .child(user.uid)
+            .child('khoanthuchi');
+
+        DatabaseReference categoryRef = FirebaseDatabase.instance
+            .reference()
+            .child('users')
+            .child(user.uid)
+            .child('typecategorys');
+
+        DataSnapshot moneySnapshot =
+            await moneyRef.once().then((snapshot) => snapshot.snapshot);
+        DataSnapshot categorySnapshot =
+            await categoryRef.once().then((snapshot) => snapshot.snapshot);
+
+        if (moneySnapshot.value != null && categorySnapshot.value != null) {
+          Map<dynamic, dynamic> moneyData =
+              moneySnapshot.value as Map<dynamic, dynamic>;
+          Map<dynamic, dynamic> categoryData =
+              categorySnapshot.value as Map<dynamic, dynamic>;
+
+          moneyData.forEach((key, value) {
+            String categoryIcon = '';
+            String categoryName = '';
+            String categoryId = value['category_id'] ?? '';
+
+            categoryData.forEach((key, catValue) {
+              if (catValue['id'] == categoryId) {
+                categoryName = catValue['name'] ?? '';
+                categoryIcon = catValue['icon'] ?? '';
+              }
+            });
+
+            String time = value['date'] ?? '';
+            String name = value['name'] ?? '';
+            String type = value['type'] ?? '';
+            String price = value['price'] ?? '0';
+            Money money = Money(
+              icon: categoryIcon,
+              nameCategory: categoryName,
+              name: name,
+              time: time,
+              type: type,
+              price: price,
+            );
+
+            danhSachGiaoDich.add(money);
+          });
+        }
+      } catch (error) {
+        print('Lỗi khi lấy dữ liệu giao dịch: $error');
+        throw error;
+      }
+    }
+    return danhSachGiaoDich;
   }
 }

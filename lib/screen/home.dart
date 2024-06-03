@@ -19,7 +19,8 @@ class HomePage extends StatelessWidget {
             FutureBuilder<List<int>>(
               future: Future.wait([
                 _firebaseService.getPriceIncomeInDay(),
-                _firebaseService.getPriceExpenseInDay()
+                _firebaseService.getPriceExpenseInDay(),
+                _firebaseService.totalIncome(),
               ]),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -36,13 +37,15 @@ class HomePage extends StatelessWidget {
                   );
                 } else {
                   // Ensure the snapshot data is not null and has the correct length
-                  if (snapshot.hasData && snapshot.data!.length == 2) {
+                  if (snapshot.hasData && snapshot.data!.length == 3) {
                     int totalIncome = snapshot.data![0];
                     int totalExpense = snapshot.data![1];
+                    int total = snapshot.data![2];
                     return SliverToBoxAdapter(
                       child: SizedBox(
                         height: 340,
-                        child: _head(user.email!, totalIncome, totalExpense),
+                        child: _head(
+                            user.email!, totalIncome, totalExpense, total),
                       ),
                     );
                   } else {
@@ -184,8 +187,8 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _head(String emailUser, int totalIncome, int totalExpense) {
-    int conlai = totalIncome - totalExpense;
+  Widget _head(String emailUser, int totalIncome, int totalExpense, int total) {
+    int conlai = total - totalExpense;
     return Stack(
       children: [
         Column(

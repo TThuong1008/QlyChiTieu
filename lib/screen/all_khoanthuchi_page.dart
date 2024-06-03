@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:qlmoney/data/category.dart';
 import 'package:qlmoney/data/money.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:qlmoney/widgets/category_list.dart';
 import 'package:qlmoney/widgets/khoan_thuchi_listview.dart';
 import 'package:qlmoney/data/list_price_find.dart'; // Import tệp dịch vụ
 
 class AllKhoanThuChi extends StatefulWidget {
-  const AllKhoanThuChi({super.key});
+  const AllKhoanThuChi({Key? key}) : super(key: key);
 
   @override
   State<AllKhoanThuChi> createState() => _AllKhoanThuChiState();
@@ -15,7 +16,6 @@ class AllKhoanThuChi extends StatefulWidget {
 
 class _AllKhoanThuChiState extends State<AllKhoanThuChi> {
   List<Category> categoryList = [];
-
   List<Money> khoanThuChiList = [];
 
   @override
@@ -170,13 +170,19 @@ class _AllKhoanThuChiState extends State<AllKhoanThuChi> {
                 child: ListView.builder(
                   itemCount: khoanThuChiList.length,
                   itemBuilder: (context, index) {
-                    return KhoanThuChiListview(
-                      name: khoanThuChiList[index].name,
-                      icon: khoanThuChiList[index].icon,
-                      date: khoanThuChiList[index].time,
-                      price: khoanThuChiList[index].price,
-                      type: khoanThuChiList[index].type,
-                      money: khoanThuChiList[index],
+                    return GestureDetector(
+                      // Sử dụng GestureDetector để bắt sự kiện nhấn giữ
+                      onLongPress: () {
+                        _showDeleteConfirmationDialog(khoanThuChiList[index]);
+                      },
+                      child: KhoanThuChiListview(
+                        name: khoanThuChiList[index].name,
+                        icon: khoanThuChiList[index].icon,
+                        date: khoanThuChiList[index].time,
+                        price: khoanThuChiList[index].price,
+                        type: khoanThuChiList[index].type,
+                        money: khoanThuChiList[index],
+                      ),
                     );
                   },
                 ),
@@ -188,7 +194,65 @@ class _AllKhoanThuChiState extends State<AllKhoanThuChi> {
     );
   }
 
-  // Ham hien thi Calender
+  // Hàm hiển thị hộp thoại xác nhận xóa
+  Future<void> _showDeleteConfirmationDialog(Money money) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // Click ngoài hộp thoại không đóng hộp thoại
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Xác nhận xóa'),
+          content: const SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text('Bạn có chắc chắn muốn xóa mục này không?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Hủy'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Đóng hộp thoại
+              },
+            ),
+            TextButton(
+              child: Text('Xóa'),
+              onPressed: () {
+                // Thực hiện xóa và đóng hộp thoại
+                _deleteMoneyItem(money);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Hàm xóa mục khoản thu chi
+  void _deleteMoneyItem(Money money) {
+    DocumentReference documentReference =
+        FirebaseFirestore.instance.collection('khoanthuchi').doc(money.id);
+
+    // Thực hiện xóa tài liệu từ Firestore
+    documentReference.delete().then((value) {
+      // Xóa thành công, cập nhật giao diện người dùng
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Đã xóa mục')),
+      );
+    }).catchError((error) {
+      // Xử lý lỗi nếu có
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Lỗi khi xóa mục: $error')),
+      );
+    });
+    setState(() {
+      khoanThuChiList.remove(money);
+    });
+  }
+
+// Ham hien thi Calender
   Future<void> _showDatePicker() async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
@@ -196,7 +260,6 @@ class _AllKhoanThuChiState extends State<AllKhoanThuChi> {
       firstDate: DateTime(2000),
       lastDate: DateTime(2101),
     );
-
     if (pickedDate != null) {
       // Lấy dữ liệu cho ngày đã chọn
       _layDuLieu(pickedDate);

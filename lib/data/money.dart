@@ -1,4 +1,5 @@
 class Money {
+  String? id;
   String? icon;
   String? nameCategory;
   String? name;
@@ -7,6 +8,7 @@ class Money {
   String? price;
 
   Money({
+    this.id,
     this.icon,
     this.nameCategory,
     this.name,

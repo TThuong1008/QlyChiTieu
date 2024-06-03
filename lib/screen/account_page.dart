@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:qlmoney/screen/bottom_navigation_bar.dart';
@@ -15,7 +16,31 @@ class AccountPage extends StatefulWidget {
 }
 
 class _AccountPageState extends State<AccountPage> {
-  bool isDrakMode = false;
+  bool isDarkMode = false;
+  String? _avatarUrl;
+  final DatabaseReference _userRef =
+      FirebaseDatabase.instance.reference().child('users').child('account');
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDataFromFirebase();
+  }
+
+  // Fetch data from Firebase
+  void fetchDataFromFirebase() {
+    _userRef.once().then((DatabaseEvent event) {
+      DataSnapshot snapshot = event.snapshot;
+      if (snapshot.value != null && snapshot.value is Map<dynamic, dynamic>) {
+        var userData = snapshot.value as Map<dynamic, dynamic>;
+        setState(() {
+          _avatarUrl = userData['avatar'];
+        });
+      }
+    }).catchError((error) {
+      print('Đã xảy ra lỗi khi lấy dữ liệu từ Firebase: $error');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +89,26 @@ class _AccountPageState extends State<AccountPage> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Image.asset(
-                            "assets/image/avatar.png",
-                            width: 70,
-                            height: 70,
-                          ),
+                          _avatarUrl != null
+                              ? Image.network(
+                                  _avatarUrl!,
+                                  width: 70,
+                                  height: 70,
+                                  errorBuilder: (BuildContext context,
+                                      Object exception,
+                                      StackTrace? stackTrace) {
+                                    return Image.asset(
+                                      'assets/image/avatar.png',
+                                      width: 70,
+                                      height: 70,
+                                    );
+                                  },
+                                )
+                              : Image.asset(
+                                  "assets/image/avatar.png",
+                                  width: 70,
+                                  height: 70,
+                                ),
                           const SizedBox(width: 20),
                           const Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,13 +132,19 @@ class _AccountPageState extends State<AccountPage> {
                           ),
                           const Spacer(),
                           ForwardButton(
-                            ontap: () {
-                              Navigator.push(
+                            ontap: () async {
+                              final result = await Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
                                         const EditAccountPage()),
                               );
+
+                              if (result != null) {
+                                setState(() {
+                                  _avatarUrl = result as String;
+                                });
+                              }
                             },
                           ),
                         ],
@@ -139,10 +185,10 @@ class _AccountPageState extends State<AccountPage> {
                       icon: Ionicons.moon,
                       bgColor: Colors.purple.shade100,
                       iconColor: Colors.purple,
-                      value: isDrakMode,
+                      value: isDarkMode,
                       onTap: (value) {
                         setState(() {
-                          isDrakMode = value;
+                          isDarkMode = value;
                         });
                       },
                     ),
@@ -173,31 +219,12 @@ class _AccountPageState extends State<AccountPage> {
               ),
             ),
           ),
-          // Padding(
-          //   padding: const EdgeInsets.all(20.0),
-          //   child: Align(
-          //     alignment: Alignment.bottomRight,
-          //     child: IconButton(
-          //       onPressed: () {
-          //         // Handle logout action here
-          //       },
-          //       style: IconButton.styleFrom(
-          //         backgroundColor: Colors.lightBlueAccent,
-          //         shape: RoundedRectangleBorder(
-          //             borderRadius: BorderRadius.circular(15)),
-          //         fixedSize: Size(55, 50),
-          //         elevation: 3,
-          //       ),
-          //       icon: const Icon(Ionicons.log_out_outline),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );
   }
 
-  // method signout
+  // Sign out method
   void signUserOut() {
     FirebaseAuth.instance.signOut();
   }
