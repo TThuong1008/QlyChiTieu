@@ -39,6 +39,7 @@ class _ThongKePageState extends State<ThongKePage> {
     });
   }
 
+// Ham tinh tong tien cua tung Category
   Map<String, double> tongCategory(List<Money> data) {
     Map<String, double> result = {};
     double income = 0;
@@ -250,7 +251,6 @@ class _ThongKePageState extends State<ThongKePage> {
                                 updateChartData(); // Gọi hàm cập nhật dữ liệu
                               });
 
-                              // Sau 300ms, đặt lại trạng thái của nút
                               Future.delayed(Duration(milliseconds: 300), () {
                                 setState(() {
                                   nutThongKe = false;
