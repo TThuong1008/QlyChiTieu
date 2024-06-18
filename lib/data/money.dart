@@ -3,22 +3,23 @@ class Money {
   String? icon;
   String? nameCategory;
   String? name;
-  String? time;
+  String time;
   String? type;
-  String? price;
+  String price;
 
   Money({
     this.id,
     this.icon,
     this.nameCategory,
     this.name,
-    this.time,
+    required this.time,
     this.type,
-    this.price,
+    required this.price,
   });
 
   factory Money.fromJson(Map<String, dynamic> json) {
     return Money(
+      id: json['id'],
       icon: json['icon'],
       nameCategory: json['name'],
       name: json['name'],

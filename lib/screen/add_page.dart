@@ -30,11 +30,11 @@ class AddThuChiPage extends StatelessWidget {
               ),
               tabs: [
                 Tab(
-                  text: 'Thu',
+                  text: 'Income',
                   icon: Icon(Ionicons.arrow_up_circle_outline),
                 ),
                 Tab(
-                  text: 'Chi',
+                  text: 'Expense',
                   icon: Icon(Ionicons.arrow_down_circle_outline),
                 ),
               ],

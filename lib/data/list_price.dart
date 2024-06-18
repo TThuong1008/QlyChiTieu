@@ -34,15 +34,15 @@ class FirebaseService {
             String categoryIcon = '';
             String categoryName = '';
             String categoryId = value['category_id'];
-            if (categorySnapshot != null) {
-              categorySnapshot.forEach((key, categoryValue) {
-                String id = categoryValue['id'];
-                if (id == categoryId) {
-                  categoryName = categoryValue['name'];
-                  categoryIcon = categoryValue['icon'];
-                }
-              });
-            }
+
+            categorySnapshot.forEach((key, categoryValue) {
+              String id = categoryValue['id'];
+              if (id == categoryId) {
+                categoryName = categoryValue['name'];
+                categoryIcon = categoryValue['icon'];
+              }
+            });
+
             String time = value['date'];
             String name = value['name'];
             String type = value['type'];

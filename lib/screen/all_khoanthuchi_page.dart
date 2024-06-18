@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:qlmoney/data/category.dart';
@@ -17,6 +19,11 @@ class AllKhoanThuChi extends StatefulWidget {
 class _AllKhoanThuChiState extends State<AllKhoanThuChi> {
   List<Category> categoryList = [];
   List<Money> khoanThuChiList = [];
+  List<Money> filteredList = [];
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseDatabase _database = FirebaseDatabase.instance;
+  final TextEditingController _searchController = TextEditingController();
+  Category? selectedCategory;
 
   @override
   void initState() {
@@ -24,6 +31,7 @@ class _AllKhoanThuChiState extends State<AllKhoanThuChi> {
     // Lấy dữ liệu ban đầu cho tất cả các ngày
     _layDuLieu(
         DateTime(1970)); // Chọn một ngày ở quá khứ để lấy tất cả các giao dịch
+    _searchController.addListener(_filterByName);
   }
 
   Future<void> _layDuLieu(DateTime? selectedDate) async {
@@ -31,8 +39,33 @@ class _AllKhoanThuChiState extends State<AllKhoanThuChi> {
     List<Category> dataCate = await layCategory();
     setState(() {
       khoanThuChiList = data;
+      filteredList = data;
       categoryList = dataCate;
     });
+  }
+
+  void _filterByName() {
+    setState(() {
+      String query = _searchController.text.toLowerCase();
+      filteredList = khoanThuChiList.where((money) {
+        return money.name!.toLowerCase().contains(query);
+      }).toList();
+    });
+  }
+
+  void _filterByCategory(Category category) {
+    setState(() {
+      selectedCategory = category;
+      filteredList = khoanThuChiList
+          .where((money) => money.nameCategory == category.name)
+          .toList();
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   @override
@@ -87,8 +120,12 @@ class _AllKhoanThuChiState extends State<AllKhoanThuChi> {
                               child: Icon(Icons.search),
                             ),
                           ),
-                          const Expanded(
+                          Expanded(
                             child: TextField(
+                              controller: _searchController,
+                              onSubmitted: (value) {
+                                _filterByName();
+                              },
                               decoration: InputDecoration(
                                 border: InputBorder.none,
                                 hintText: "Search name Income or Expense!",
@@ -144,14 +181,17 @@ class _AllKhoanThuChiState extends State<AllKhoanThuChi> {
                   itemCount: categoryList.length,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
-                    return CategoryList(
-                        name: categoryList[index].name,
-                        icon: categoryList[index].icon,
-                        totalPrice: categoryList[index].totalPrice);
+                    return GestureDetector(
+                      onTap: () => _filterByCategory(categoryList[index]),
+                      child: CategoryList(
+                          name: categoryList[index].name,
+                          icon: categoryList[index].icon,
+                          totalPrice: categoryList[index].totalPrice),
+                    );
                   }),
             ),
 
-            // Khoan Thu va Khoan Chi
+            // Khoản thu và khoản chi
             const SizedBox(
               height: 30,
             ),
@@ -164,24 +204,27 @@ class _AllKhoanThuChiState extends State<AllKhoanThuChi> {
                     color: Colors.black,
                   )),
             ),
+            const SizedBox(
+              height: 10,
+            ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: ListView.builder(
-                  itemCount: khoanThuChiList.length,
+                  itemCount: filteredList.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
                       // Sử dụng GestureDetector để bắt sự kiện nhấn giữ
                       onLongPress: () {
-                        _showDeleteConfirmationDialog(khoanThuChiList[index]);
+                        _showDeleteConfirmationDialog(filteredList[index]);
                       },
                       child: KhoanThuChiListview(
-                        name: khoanThuChiList[index].name,
-                        icon: khoanThuChiList[index].icon,
-                        date: khoanThuChiList[index].time,
-                        price: khoanThuChiList[index].price,
-                        type: khoanThuChiList[index].type,
-                        money: khoanThuChiList[index],
+                        name: filteredList[index].name,
+                        icon: filteredList[index].icon,
+                        date: filteredList[index].time,
+                        price: filteredList[index].price,
+                        type: filteredList[index].type,
+                        money: filteredList[index],
                       ),
                     );
                   },
@@ -201,23 +244,35 @@ class _AllKhoanThuChiState extends State<AllKhoanThuChi> {
       barrierDismissible: false, // Click ngoài hộp thoại không đóng hộp thoại
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Xác nhận xóa'),
+          backgroundColor: Color.fromARGB(255, 212, 239, 251),
+          title: const Text(
+            'Xác nhận xóa',
+            style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+          ),
           content: const SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Bạn có chắc chắn muốn xóa mục này không?'),
+                Text('Bạn có muốn xóa mục này không?'),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text('Hủy'),
+              child: const Text(
+                'Hủy',
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              ),
               onPressed: () {
                 Navigator.of(context).pop(); // Đóng hộp thoại
               },
             ),
             TextButton(
-              child: Text('Xóa'),
+              child: const Text(
+                'Xóa',
+                style:
+                    TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+              ),
               onPressed: () {
                 // Thực hiện xóa và đóng hộp thoại
                 _deleteMoneyItem(money);
@@ -231,34 +286,43 @@ class _AllKhoanThuChiState extends State<AllKhoanThuChi> {
   }
 
   // Hàm xóa mục khoản thu chi
-  void _deleteMoneyItem(Money money) {
-    DocumentReference documentReference =
-        FirebaseFirestore.instance.collection('khoanthuchi').doc(money.id);
+  Future<void> _deleteMoneyItem(Money money) async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      DatabaseReference databaseReference = FirebaseDatabase.instance
+          .reference()
+          .child('users')
+          .child(user.uid)
+          .child('khoanthuchi')
+          .child(money.id!);
+      // Thực hiện xóa tài liệu từ Realtime Database
+      databaseReference.remove().then((value) {
+        // Xóa thành công, cập nhật giao diện người dùng
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Deleted item')),
+        );
 
-    // Thực hiện xóa tài liệu từ Firestore
-    documentReference.delete().then((value) {
-      // Xóa thành công, cập nhật giao diện người dùng
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Đã xóa mục')),
-      );
-    }).catchError((error) {
-      // Xử lý lỗi nếu có
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Lỗi khi xóa mục: $error')),
-      );
-    });
-    setState(() {
-      khoanThuChiList.remove(money);
-    });
+        // Cập nhật giao diện người dùng sau khi xóa thành công
+        setState(() {
+          khoanThuChiList.remove(money);
+          filteredList.remove(money);
+        });
+      }).catchError((error) {
+        // Xử lý lỗi nếu có
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Lỗi khi xóa mục: $error')),
+        );
+      });
+    }
   }
 
-// Ham hien thi Calender
+  // Ham hien thi Calender
   Future<void> _showDatePicker() async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
       firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      lastDate: DateTime.now(),
     );
     if (pickedDate != null) {
       // Lấy dữ liệu cho ngày đã chọn

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:qlmoney/screen/bottom_navigation_bar.dart';
 import 'package:qlmoney/screen/edit_account_page.dart';
+import 'package:qlmoney/screen/screen_started.dart';
 import 'package:qlmoney/widgets/forward_button.dart';
 import 'package:qlmoney/widgets/setting_item.dart';
 import 'package:qlmoney/widgets/setting_switch.dart';
@@ -18,12 +19,20 @@ class AccountPage extends StatefulWidget {
 class _AccountPageState extends State<AccountPage> {
   bool isDarkMode = false;
   String? _avatarUrl;
-  final DatabaseReference _userRef =
-      FirebaseDatabase.instance.reference().child('users').child('account');
+  String? _nameUser;
+  late DatabaseReference _userRef;
 
   @override
   void initState() {
     super.initState();
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      _userRef = FirebaseDatabase.instance
+          .reference()
+          .child('users')
+          .child(user.uid)
+          .child('account');
+    }
     fetchDataFromFirebase();
   }
 
@@ -35,6 +44,7 @@ class _AccountPageState extends State<AccountPage> {
         var userData = snapshot.value as Map<dynamic, dynamic>;
         setState(() {
           _avatarUrl = userData['avatar'];
+          _nameUser = userData['name'];
         });
       }
     }).catchError((error) {
@@ -48,11 +58,7 @@ class _AccountPageState extends State<AccountPage> {
       appBar: AppBar(
         leading: IconButton(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const BottomNavigationPage()),
-            );
+            Navigator.pop(context);
           },
           icon: const Icon(Ionicons.chevron_back_outline),
         ),
@@ -110,17 +116,25 @@ class _AccountPageState extends State<AccountPage> {
                                   height: 70,
                                 ),
                           const SizedBox(width: 20),
-                          const Column(
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                "Truong Thi Thuong",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              Text(
+                              _nameUser != null
+                                  ? Text(
+                                      _nameUser!,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    )
+                                  : const Text(
+                                      "Default Name",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                              const Text(
                                 "22IT296",
                                 style: TextStyle(
                                   fontSize: 17,
@@ -212,6 +226,15 @@ class _AccountPageState extends State<AccountPage> {
                       iconColor: Colors.red,
                       onTap: () {
                         signUserOut();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SplashScreen(onTap: () {
+                              // Define the action for onTap here
+                              print("Button tapped");
+                            }),
+                          ),
+                        );
                       },
                     ),
                   ],

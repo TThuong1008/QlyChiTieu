@@ -65,381 +65,405 @@ class _AddExpenseFormState extends State<AddExpenseForm> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        backgroundColor: Colors.grey[200],
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Text(
-                'Add Expense',
-                style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.lightBlue),
+        backgroundColor: Colors.white,
+        body: Stack(
+          children: [
+            Positioned.fill(
+              child: Image.asset(
+                'assets/image/add.jpg', // Đường dẫn tới hình ảnh của bạn
+                fit: BoxFit.fill,
               ),
-              const SizedBox(
-                height: 16,
-              ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: TextFormField(
-                  controller: expenseNameController,
-                  textAlignVertical: TextAlignVertical.center,
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    prefixIcon: const Icon(FontAwesomeIcons.tags,
-                        size: 16, color: Colors.blue),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    labelText: 'Expense Name',
-                    hintText: 'Enter expense name',
+            ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // const Text(
+                  //   'Add Expense',
+                  //   style: TextStyle(
+                  //       fontSize: 22,
+                  //       fontWeight: FontWeight.bold,
+                  //       color: Colors.orange),
+                  // ),
+                  const SizedBox(
+                    height: 120,
                   ),
-                ),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              SizedBox(
-                // width: MediaQuery.of(context).size.width * 0.7,
-                child: TextFormField(
-                  key: _formKey,
-                  controller: expensePriceController,
-                  textAlignVertical: TextAlignVertical.center,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
-                  ],
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    prefixIcon: const Icon(FontAwesomeIcons.dollarSign,
-                        size: 16, color: Colors.blue),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    labelText: 'How much?',
-                    hintText: 'Enter expense price',
-                  ),
-                  validator: _validatePrice,
-                ),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              // chọn tên loại chi tiêu
-              TextFormField(
-                textAlignVertical: TextAlignVertical.center,
-                controller: typeController,
-                readOnly: true,
-                onTap: () {
-                  // Hiển thị menu thả xuống khi nhấn vào TextField
-                  showDialog(
-                    context: context,
-                    builder: (ctx) {
-                      return AlertDialog(
-                        title: const Text('Select Category'),
-                        content: DropdownButtonFormField<String>(
-                          value: selectedCategory,
-                          items: categories.map((category) {
-                            return DropdownMenuItem<String>(
-                              value: category,
-                              child: Text(category),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              selectedCategory = value;
-                              typeController.text = value!;
-                            });
-                            Navigator.pop(ctx); // Đóng hộp thoại sau khi chọn
-                          },
+                  Row(
+                    children: [
+                      SizedBox(
+                        width: 180,
+                        // width: MediaQuery.of(context).size.width * 0.7,
+                        child: TextFormField(
+                          controller: expenseNameController,
+                          textAlignVertical: TextAlignVertical.center,
                           decoration: InputDecoration(
                             filled: true,
-                            fillColor: Colors.white,
-                            prefixIcon: const Icon(
-                              FontAwesomeIcons.list,
-                              size: 16,
-                              color: Colors.blue,
-                            ),
+                            fillColor: Colors.blue[50],
+                            prefixIcon: const Icon(FontAwesomeIcons.tags,
+                                size: 16, color: Colors.blue),
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(30),
                             ),
-                            hintText: 'Name Type',
+                            labelText: 'Name',
+                            hintText: 'Enter expense name',
                           ),
-                          dropdownColor: Colors.white,
                         ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      SizedBox(
+                        width: 185,
+                        // width: MediaQuery.of(context).size.width * 0.7,
+                        child: TextFormField(
+                          key: _formKey,
+                          controller: expensePriceController,
+                          textAlignVertical: TextAlignVertical.center,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d*\.?\d*')),
+                          ],
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: Colors.blue[50],
+                            prefixIcon: const Icon(FontAwesomeIcons.dollarSign,
+                                size: 16, color: Colors.blue),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            labelText: 'How much?',
+                            hintText: 'Enter expense price',
+                          ),
+                          validator: _validatePrice,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  // chọn tên loại chi tiêu
+                  TextFormField(
+                    textAlignVertical: TextAlignVertical.center,
+                    controller: typeController,
+                    readOnly: true,
+                    onTap: () {
+                      // Hiển thị menu thả xuống khi nhấn vào TextField
+                      showDialog(
+                        context: context,
+                        builder: (ctx) {
+                          return AlertDialog(
+                            title: const Text('Select Category'),
+                            content: DropdownButtonFormField<String>(
+                              value: selectedCategory,
+                              items: categories.map((category) {
+                                return DropdownMenuItem<String>(
+                                  value: category,
+                                  child: Text(category),
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  selectedCategory = value;
+                                  typeController.text = value!;
+                                });
+                                Navigator.pop(
+                                    ctx); // Đóng hộp thoại sau khi chọn
+                              },
+                              decoration: InputDecoration(
+                                filled: true,
+                                fillColor: Colors.white,
+                                prefixIcon: const Icon(
+                                  FontAwesomeIcons.list,
+                                  size: 16,
+                                  color: Colors.blue,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                hintText: 'Name Type',
+                              ),
+                              dropdownColor: Colors.white,
+                            ),
+                          );
+                        },
                       );
                     },
-                  );
-                },
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  prefixIcon: const Icon(FontAwesomeIcons.list,
-                      size: 16, color: Colors.blue),
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (ctx) {
-                            bool isExpense = false;
-                            String iconSelected = '';
-                            TextEditingController nameAddTypeController =
-                                TextEditingController();
-                            return StatefulBuilder(
-                                builder: (context, setState) {
-                              return AlertDialog(
-                                title: const Text('Add Type Category'),
-                                backgroundColor:
-                                    const Color.fromARGB(255, 167, 225, 245),
-                                content: SizedBox(
-                                  width: MediaQuery.of(context).size.width,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      TextFormField(
-                                        controller: nameAddTypeController,
-                                        textAlignVertical:
-                                            TextAlignVertical.center,
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          filled: true,
-                                          fillColor: Colors.white,
-                                          border: OutlineInputBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12),
-                                            borderSide: BorderSide.none,
-                                          ),
-                                          hintText: 'Name',
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 16,
-                                      ),
-                                      TextFormField(
-                                        onTap: () {
-                                          setState(() {
-                                            isExpense = !isExpense;
-                                          });
-                                        },
-                                        textAlignVertical:
-                                            TextAlignVertical.center,
-                                        readOnly: true,
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          filled: true,
-                                          suffixIcon: const Icon(
-                                            CupertinoIcons.chevron_down,
-                                            size: 12,
-                                          ),
-                                          fillColor: Colors.white,
-                                          border: OutlineInputBorder(
-                                            borderRadius: isExpense
-                                                ? const BorderRadius.vertical(
-                                                    top: Radius.circular(12),
-                                                  )
-                                                : BorderRadius.circular(12),
-                                            borderSide: BorderSide.none,
-                                          ),
-                                          hintText: 'Icon',
-                                        ),
-                                      ),
-                                      isExpense
-                                          ? Container(
-                                              width: MediaQuery.of(context)
-                                                  .size
-                                                  .width,
-                                              height: 200,
-                                              decoration: const BoxDecoration(
-                                                color: Colors.white,
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.blue[50],
+                      prefixIcon: const Icon(FontAwesomeIcons.list,
+                          size: 16, color: Colors.blue),
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (ctx) {
+                                bool isExpense = false;
+                                String iconSelected = '';
+                                TextEditingController nameAddTypeController =
+                                    TextEditingController();
+                                return StatefulBuilder(
+                                    builder: (context, setState) {
+                                  return AlertDialog(
+                                    title: const Text('Add Type Category'),
+                                    backgroundColor: const Color.fromARGB(
+                                        255, 167, 225, 245),
+                                    content: SizedBox(
+                                      width: MediaQuery.of(context).size.width,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          TextFormField(
+                                            controller: nameAddTypeController,
+                                            textAlignVertical:
+                                                TextAlignVertical.center,
+                                            decoration: InputDecoration(
+                                              isDense: true,
+                                              filled: true,
+                                              fillColor: Colors.white,
+                                              border: OutlineInputBorder(
                                                 borderRadius:
-                                                    BorderRadius.vertical(
-                                                  bottom: Radius.circular(12),
-                                                ),
+                                                    BorderRadius.circular(12),
+                                                borderSide: BorderSide.none,
                                               ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: GridView.builder(
-                                                  gridDelegate:
-                                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                                    crossAxisCount: 3,
-                                                    crossAxisSpacing: 5,
-                                                    mainAxisSpacing: 5,
+                                              hintText: 'Name',
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 16,
+                                          ),
+                                          TextFormField(
+                                            onTap: () {
+                                              setState(() {
+                                                isExpense = !isExpense;
+                                              });
+                                            },
+                                            textAlignVertical:
+                                                TextAlignVertical.center,
+                                            readOnly: true,
+                                            decoration: InputDecoration(
+                                              isDense: true,
+                                              filled: true,
+                                              suffixIcon: const Icon(
+                                                CupertinoIcons.chevron_down,
+                                                size: 12,
+                                              ),
+                                              fillColor: Colors.white,
+                                              border: OutlineInputBorder(
+                                                borderRadius: isExpense
+                                                    ? const BorderRadius
+                                                        .vertical(
+                                                        top:
+                                                            Radius.circular(12),
+                                                      )
+                                                    : BorderRadius.circular(12),
+                                                borderSide: BorderSide.none,
+                                              ),
+                                              hintText: 'Icon',
+                                            ),
+                                          ),
+                                          isExpense
+                                              ? Container(
+                                                  width: MediaQuery.of(context)
+                                                      .size
+                                                      .width,
+                                                  height: 200,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.vertical(
+                                                      bottom:
+                                                          Radius.circular(12),
+                                                    ),
                                                   ),
-                                                  itemCount:
-                                                      categoriesIcons.length,
-                                                  itemBuilder:
-                                                      (context, int i) {
-                                                    return GestureDetector(
-                                                      onTap: () {
-                                                        setState(() {
-                                                          iconSelected =
-                                                              categoriesIcons[
-                                                                  i];
-                                                        });
-                                                      },
-                                                      child: Container(
-                                                          width: 50,
-                                                          height: 50,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                                  border: Border.all(
-                                                                      width: 3,
-                                                                      color: iconSelected ==
-                                                                              categoriesIcons[
-                                                                                  i]
-                                                                          ? Colors
-                                                                              .green
-                                                                          : Colors
-                                                                              .grey),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: GridView.builder(
+                                                      gridDelegate:
+                                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                                        crossAxisCount: 3,
+                                                        crossAxisSpacing: 5,
+                                                        mainAxisSpacing: 5,
+                                                      ),
+                                                      itemCount: categoriesIcons
+                                                          .length,
+                                                      itemBuilder:
+                                                          (context, int i) {
+                                                        return GestureDetector(
+                                                          onTap: () {
+                                                            setState(() {
+                                                              iconSelected =
+                                                                  categoriesIcons[
+                                                                      i];
+                                                            });
+                                                          },
+                                                          child: Container(
+                                                              width: 50,
+                                                              height: 50,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                      border: Border.all(
+                                                                          width:
+                                                                              3,
+                                                                          color: iconSelected == categoriesIcons[i]
+                                                                              ? Colors
+                                                                                  .green
+                                                                              : Colors
+                                                                                  .grey),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
                                                                               12),
-                                                                  image:
-                                                                      DecorationImage(
-                                                                    image:
-                                                                        AssetImage(
-                                                                      'assets/image/${categoriesIcons[i]}.png',
-                                                                    ),
-                                                                  ))),
-                                                    );
-                                                  },
+                                                                      image:
+                                                                          DecorationImage(
+                                                                        image:
+                                                                            AssetImage(
+                                                                          'assets/image/${categoriesIcons[i]}.png',
+                                                                        ),
+                                                                      ))),
+                                                        );
+                                                      },
+                                                    ),
+                                                  ),
+                                                )
+                                              : Container(),
+                                          const SizedBox(
+                                            height: 16,
+                                          ),
+                                          SizedBox(
+                                            width: double.infinity,
+                                            height: kToolbarHeight,
+                                            child: TextButton(
+                                              onPressed: () {
+                                                if (nameAddTypeController
+                                                        .text.isNotEmpty &&
+                                                    iconSelected.isNotEmpty) {
+                                                  var newTypeName =
+                                                      nameAddTypeController.text
+                                                          .toString();
+                                                  _saveCategory(newTypeName,
+                                                      iconSelected);
+                                                  Navigator.pop(ctx);
+                                                }
+                                              },
+                                              style: TextButton.styleFrom(
+                                                backgroundColor: Colors.black,
+                                                padding:
+                                                    const EdgeInsets.all(16),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
                                                 ),
                                               ),
-                                            )
-                                          : Container(),
-                                      const SizedBox(
-                                        height: 16,
-                                      ),
-                                      SizedBox(
-                                        width: double.infinity,
-                                        height: kToolbarHeight,
-                                        child: TextButton(
-                                          onPressed: () {
-                                            if (nameAddTypeController
-                                                    .text.isNotEmpty &&
-                                                iconSelected.isNotEmpty) {
-                                              var newTypeName =
-                                                  nameAddTypeController.text
-                                                      .toString();
-                                              _saveCategory(
-                                                  newTypeName, iconSelected);
-                                              Navigator.pop(ctx);
-                                            }
-                                          },
-                                          style: TextButton.styleFrom(
-                                            backgroundColor: Colors.black,
-                                            padding: const EdgeInsets.all(16),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
+                                              child: const Text(
+                                                'Save',
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 22,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                          child: const Text(
-                                            'Save',
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 22,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            });
-                          });
-                    },
-                    icon: const Icon(FontAwesomeIcons.plus,
-                        size: 16, color: Color.fromARGB(255, 158, 158, 158)),
+                                    ),
+                                  );
+                                });
+                              });
+                        },
+                        icon: const Icon(FontAwesomeIcons.plus,
+                            size: 16,
+                            color: Color.fromARGB(255, 158, 158, 158)),
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      hintText: 'Category',
+                    ),
                   ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
+                  const SizedBox(
+                    height: 16,
                   ),
-                  hintText: 'Category',
-                ),
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              // chon ngày tháng
-              TextFormField(
-                controller: dateController,
-                textAlignVertical: TextAlignVertical.center,
-                readOnly: true,
-                onTap: () async {
-                  DateTime? newDate = await showDatePicker(
-                    context: context,
-                    initialDate: selectedDate,
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(const Duration(days: 365)),
-                  );
+                  // chon ngày tháng
+                  TextFormField(
+                    controller: dateController,
+                    textAlignVertical: TextAlignVertical.center,
+                    readOnly: true,
+                    onTap: () async {
+                      DateTime? newDate = await showDatePicker(
+                        context: context,
+                        initialDate: selectedDate,
+                        firstDate: DateTime.now(),
+                        lastDate: DateTime.now().add(const Duration(days: 365)),
+                      );
 
-                  if (newDate != null) {
-                    setState(() {
-                      dateController.text =
-                          DateFormat('dd/MM/yyyy').format(newDate);
-                      selectedDate = newDate;
-                    });
-                  }
-                },
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  prefixIcon: const Icon(FontAwesomeIcons.clock,
-                      size: 16, color: Colors.blue),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  hintText: 'Date',
-                ),
-              ),
-              const SizedBox(
-                height: 32,
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: kToolbarHeight,
-                child: TextButton(
-                  onPressed: () {
-                    _saveChi(
-                        expenseNameController.text,
-                        expensePriceController.text,
-                        selectedCategory!,
-                        dateController.text,
-                        _selectedValue);
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => BottomNavigationPage()),
-                    );
-                  },
-                  style: TextButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 24, 221, 10),
-                    padding: const EdgeInsets.all(16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      if (newDate != null) {
+                        setState(() {
+                          dateController.text =
+                              DateFormat('dd/MM/yyyy').format(newDate);
+                          selectedDate = newDate;
+                        });
+                      }
+                    },
+                    decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.blue[50],
+                      prefixIcon: const Icon(FontAwesomeIcons.clock,
+                          size: 16, color: Colors.blue),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      hintText: 'Date',
                     ),
                   ),
-                  child: const Text(
-                    'Save',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
+                  const SizedBox(
+                    height: 32,
+                  ),
+                  SizedBox(
+                    // width: double.infinity,
+                    width: 100,
+                    height: kToolbarHeight,
+                    child: TextButton(
+                      onPressed: () {
+                        _saveChi(
+                            expenseNameController.text,
+                            expensePriceController.text,
+                            selectedCategory!,
+                            dateController.text,
+                            _selectedValue);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BottomNavigationPage()),
+                        );
+                      },
+                      style: TextButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 24, 221, 10),
+                        padding: const EdgeInsets.all(16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: const Text(
+                        'SAVE',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

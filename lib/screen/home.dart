@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:qlmoney/data/list_price.dart';
 import 'package:qlmoney/screen/all_khoanthuchi_page.dart';
 import '../data/money.dart';
@@ -26,7 +27,10 @@ class HomePage extends StatelessWidget {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const SliverFillRemaining(
                     child: Center(
-                      child: CircularProgressIndicator(),
+                      child: SpinKitWave(
+                        color: Colors.blue,
+                        size: 50.0,
+                      ),
                     ),
                   );
                 } else if (snapshot.hasError) {
@@ -36,7 +40,6 @@ class HomePage extends StatelessWidget {
                     ),
                   );
                 } else {
-                  // Ensure the snapshot data is not null and has the correct length
                   if (snapshot.hasData && snapshot.data!.length == 3) {
                     int totalIncome = snapshot.data![0];
                     int totalExpense = snapshot.data![1];
@@ -45,12 +48,16 @@ class HomePage extends StatelessWidget {
                       child: SizedBox(
                         height: 340,
                         child: _head(
-                            user.email!, totalIncome, totalExpense, total),
+                          user.email!,
+                          totalIncome,
+                          totalExpense,
+                          total,
+                        ),
                       ),
                     );
                   } else {
                     // Handle the case where the data is not as expected
-                    return SliverFillRemaining(
+                    return const SliverFillRemaining(
                       child: Center(
                         child: Text('Unexpected data format'),
                       ),
@@ -66,37 +73,34 @@ class HomePage extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
+                      const Text(
                         'Categories',
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 19,
-                          color: Colors.black,
+                          color: Colors.orange,
                         ),
                       ),
                       Container(
                         decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(20), // Định hình viền nút
+                          borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.orange
-                                  .withOpacity(0.2), // Màu của đổ bóng
-                              spreadRadius: 3, // Bán kính của đổ bóng
-                              blurRadius: 5, // Độ mờ của đổ bóng
-                              offset:
-                                  Offset(0, 3), // Độ dịch chuyển của đổ bóng
+                              color: Colors.orange.withOpacity(0.2),
+                              spreadRadius: 3,
+                              blurRadius: 5,
+                              offset: Offset(0, 3),
                             ),
                           ],
-                          border: Border.all(
-                              color: Colors.orange), // Định dạng đường viền
+                          border: Border.all(color: Colors.orange),
                         ),
                         child: TextButton(
                           onPressed: () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => AllKhoanThuChi()),
+                                builder: (context) => AllKhoanThuChi(),
+                              ),
                             );
                           },
                           child: Text(
@@ -120,7 +124,10 @@ class HomePage extends StatelessWidget {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const SliverFillRemaining(
                     child: Center(
-                      child: CircularProgressIndicator(),
+                      child: SpinKitWave(
+                        color: Colors.blue,
+                        size: 50.0,
+                      ),
                     ),
                   );
                 } else if (snapshot.hasError) {
@@ -187,7 +194,12 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _head(String emailUser, int totalIncome, int totalExpense, int total) {
+  Widget _head(
+    String emailUser,
+    int totalIncome,
+    int totalExpense,
+    int total,
+  ) {
     int conlai = total - totalExpense;
     return Stack(
       children: [
@@ -196,8 +208,8 @@ class HomePage extends StatelessWidget {
             Container(
               width: double.infinity,
               height: 240,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
                   colors: [
                     Color.fromARGB(255, 86, 175, 248),
                     Color.fromARGB(255, 189, 251, 245),
@@ -205,7 +217,7 @@ class HomePage extends StatelessWidget {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(20),
                   bottomRight: Radius.circular(20),
                 ),
@@ -220,7 +232,7 @@ class HomePage extends StatelessWidget {
                       child: Container(
                         height: 40,
                         width: 40,
-                        color: Color.fromRGBO(250, 250, 250, 0.1),
+                        color: const Color.fromRGBO(250, 250, 250, 0.1),
                         child: const Icon(
                           Icons.notification_add_outlined,
                           size: 30,
@@ -292,8 +304,8 @@ class HomePage extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -305,7 +317,7 @@ class HomePage extends StatelessWidget {
                           color: Color.fromARGB(255, 126, 126, 126),
                         ),
                       ),
-                      Icon(
+                      const Icon(
                         Icons.more_horiz,
                         color: Colors.white,
                       ),
@@ -316,7 +328,7 @@ class HomePage extends StatelessWidget {
                   height: 7,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: 15),
+                  padding: const EdgeInsets.only(left: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -343,7 +355,7 @@ class HomePage extends StatelessWidget {
                         children: [
                           CircleAvatar(
                             radius: 13,
-                            backgroundColor: Color.fromARGB(255, 90, 142, 198),
+                            backgroundColor: Colors.green,
                             child: Icon(
                               Icons.arrow_downward,
                               color: Colors.white,
@@ -367,17 +379,17 @@ class HomePage extends StatelessWidget {
                         children: [
                           CircleAvatar(
                             radius: 13,
-                            backgroundColor: Color.fromARGB(255, 90, 142, 198),
-                            child: Icon(
+                            backgroundColor: Colors.pink,
+                            child: const Icon(
                               Icons.arrow_upward,
                               color: Colors.white,
                               size: 19,
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 7,
                           ),
-                          Text(
+                          const Text(
                             'Expenses',
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
@@ -406,7 +418,7 @@ class HomePage extends StatelessWidget {
                       ),
                       Text(
                         '\$ $totalExpense',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 17,
                           color: Color.fromRGBO(206, 252, 252, 1),

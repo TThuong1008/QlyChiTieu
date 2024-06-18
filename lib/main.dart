@@ -1,6 +1,7 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:qlmoney/data/login_main_page.dart';
+import 'package:qlmoney/screen/screen_started.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,8 +13,19 @@ Future<void> main() async {
       projectId: "quanlychitieu-ccdbf",
       databaseURL:
           'https://quanlychitieu-ccdbf-default-rtdb.asia-southeast1.firebasedatabase.app/',
+      storageBucket: 'gs://quanlychitieu-ccdbf.appspot.com',
     ),
   );
+
+  AwesomeNotifications().initialize(
+      null,
+      [
+        NotificationChannel(
+            channelKey: 'Remind_1',
+            channelName: 'Remind_Notification',
+            channelDescription: "Ban co 1 nhac nho!")
+      ],
+      debug: true);
 
   runApp(const MyApp());
 }
@@ -25,12 +37,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Money Management',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
+      themeMode: ThemeMode.light,
+      home: SplashScreen(
+        onTap: () {},
       ),
-      home: const LoginMainPage(),
     );
   }
 }

@@ -42,6 +42,7 @@ Future<List<Money>> layKhoanThuChi(DateTime selectedDate) async {
               }
             });
           }
+          String id = value['id'];
           String time = value['date'];
           String name = value['name'];
           String type = value['type'];
@@ -54,6 +55,7 @@ Future<List<Money>> layKhoanThuChi(DateTime selectedDate) async {
 
           if (selectedDate == DateTime(1970)) {
             Money money = Money(
+              id: id,
               icon: categoryIcon,
               nameCategory: categoryName,
               name: name,
@@ -75,6 +77,7 @@ Future<List<Money>> layKhoanThuChi(DateTime selectedDate) async {
                 (transactionDate.isAfter(dayFindStart) &&
                     transactionDate.isBefore(dayFindEnd))) {
               Money money = Money(
+                id: id,
                 icon: categoryIcon,
                 nameCategory: categoryName,
                 name: name,
