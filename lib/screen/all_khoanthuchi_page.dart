@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:qlmoney/data/category.dart';
 import 'package:qlmoney/data/money.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:qlmoney/widgets/category_list.dart';
 import 'package:qlmoney/widgets/khoan_thuchi_listview.dart';
 import 'package:qlmoney/data/list_price_find.dart'; // Import tệp dịch vụ
@@ -21,16 +20,13 @@ class _AllKhoanThuChiState extends State<AllKhoanThuChi> {
   List<Money> khoanThuChiList = [];
   List<Money> filteredList = [];
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseDatabase _database = FirebaseDatabase.instance;
   final TextEditingController _searchController = TextEditingController();
   Category? selectedCategory;
 
   @override
   void initState() {
     super.initState();
-    // Lấy dữ liệu ban đầu cho tất cả các ngày
-    _layDuLieu(
-        DateTime(1970)); // Chọn một ngày ở quá khứ để lấy tất cả các giao dịch
+    _layDuLieu(DateTime(1970)); //lấy tất cả các giao dịch
     _searchController.addListener(_filterByName);
   }
 

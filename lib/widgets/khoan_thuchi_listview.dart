@@ -56,7 +56,7 @@ class KhoanThuChiListview extends StatelessWidget {
                       height: 5,
                     ),
                     Text(
-                      time!,
+                      time,
                       style: const TextStyle(
                         fontSize: 16,
                         fontStyle: FontStyle.italic,
@@ -68,7 +68,7 @@ class KhoanThuChiListview extends StatelessWidget {
               ],
             ),
             Text(
-              ((type) == 'Income' ? "+\$ " : "-\$ ") + price!,
+              ((type) == 'Income' ? "+\$ " : "-\$ ") + price,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 17,

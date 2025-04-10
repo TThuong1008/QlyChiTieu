@@ -1,12 +1,11 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:qlmoney/data/event.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-import 'package:uuid/uuid.dart'; // Thêm thư viện uuid
+import 'package:uuid/uuid.dart';
 
 import 'bottom_navigation_bar.dart';
 
@@ -54,8 +53,7 @@ class _RemindPageState extends State<RemindPage> {
             try {
               String eventId = key; // Sử dụng id làm key
               String title = value['title'];
-              DateTime date = DateTime.parse(
-                  value['date']); // Chuyển đổi date thành DateTime
+              DateTime date = DateTime.parse(value['date']);
               Event event = Event(eventId, title, date);
               eventsMap.update(date, (existingEvents) {
                 existingEvents.add(event);
@@ -109,39 +107,6 @@ class _RemindPageState extends State<RemindPage> {
       });
     });
   }
-
-  // void fetchEventsFromDatabase() async {
-  //   final user = _auth.currentUser;
-  //   if (user != null) {
-  //     DatabaseReference eventsRef =
-  //         _database.reference().child('users').child(user.uid).child('events');
-  //     try {
-  //       DataSnapshot snapshot = await eventsRef.get(); // Sử dụng DataSnapshot
-  //       Map<dynamic, dynamic> eventsData =
-  //           snapshot.value as Map<dynamic, dynamic>;
-  //       Map<DateTime, List<Event>> eventsMap = {}; // Sử dụng DateTime làm key
-  //       eventsData.forEach((key, value) {
-  //         try {
-  //           String eventId = key; // Sử dụng id làm key
-  //           String title = value['title'];
-  //           DateTime date =
-  //               DateTime.parse(value['date']); // Chuyển đổi date thành DateTime
-  //           Event event = Event(eventId, title, date);
-  //           eventsMap[date] = [event];
-  //         } catch (e) {
-  //           print('Error parsing event: $e');
-  //         }
-  //       });
-
-  //       setState(() {
-  //         events = eventsMap;
-  //         selectedEvents.value = _getEventsForDay(selectedDay!);
-  //       });
-  //     } catch (e) {
-  //       print('Error fetching events: $e');
-  //     }
-  //   }
-  // }
 
   void _onDaySelected(DateTime day, DateTime focusedDay) {
     if (!isSameDay(selectedDay, day)) {
@@ -204,7 +169,10 @@ class _RemindPageState extends State<RemindPage> {
             "Delete confirm",
             style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
           ),
-          content: Text("Do you want to delete ${event.title}"),
+          content: Text(
+            "Do you want to delete ${event.title}",
+            style: TextStyle(color: Colors.white),
+          ),
           actions: <Widget>[
             TextButton(
               child: const Text(
